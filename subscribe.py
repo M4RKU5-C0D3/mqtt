@@ -25,14 +25,13 @@ def callback(notification_type, notification):
 
 # noinspection PyUnusedLocal
 def on_message(client, userdata, msg):
-    print(f"Recieved topic '{msg.topic}' with payload '{msg.payload}'")
     DBusNotification(appname="dbus_notification", callback=callback).send(
-        title="test",
-        message="this is a test message",
-        logo="logo.png",
-        image="myimage.png",
-        sound="message-new-instant",
-        actions=["Test Button"],
+        title="MQTT",
+        message=f"Recieved topic '{msg.topic}' with payload '{msg.payload}'",
+        logo="/usr/share/icons/Yaru/16x16/status/dialog-warning.png",
+        image="/usr/share/icons/Yaru/16x16/status/dialog-information.png",
+        sound="/usr/share/sounds/gnome/default/alerts/hum.ogg",
+        actions=["Yes","No"],
         urgency=1,
         timeout=100,
     )
