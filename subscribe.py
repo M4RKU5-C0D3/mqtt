@@ -1,6 +1,7 @@
-from dotenv import load_dotenv
 import os
 import paho.mqtt.client as mqtt
+from dotenv import load_dotenv
+from dbus_notification import DBusNotification
 
 load_dotenv()
 
@@ -15,9 +16,26 @@ def on_connect(client, userdata, flags, reason_code, properties):
         "mm/test")  # Subscribing in on_connect() means that if we lose the connection and reconnect then subscriptions will be renewed.
 
 
+def callback(notification_type, notification):
+    if notification_type == "closed":
+        print(f"Notification {notification['id']} has closed.")
+    elif notification_type == "button":
+        print(f"Notification {notification['id']} has clicked on the button {notification['button']}.")
+
+
 # noinspection PyUnusedLocal
 def on_message(client, userdata, msg):
     print(f"Recieved topic '{msg.topic}' with payload '{msg.payload}'")
+    DBusNotification(appname="dbus_notification", callback=callback).send(
+        title="test",
+        message="this is a test message",
+        logo="logo.png",
+        image="myimage.png",
+        sound="message-new-instant",
+        actions=["Test Button"],
+        urgency=1,
+        timeout=100,
+    )
 
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
