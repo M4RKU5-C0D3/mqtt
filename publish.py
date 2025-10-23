@@ -6,6 +6,7 @@ load_dotenv()
 
 MQTT_USER = os.getenv("USER")
 MQTT_PASS = os.getenv("PASS")
+MQTT_HOST = os.getenv("HOST")
 
 
 # noinspection PyUnusedLocal
@@ -16,5 +17,5 @@ def on_connect(client, userdata, flags, reason_code, properties):
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect
 mqttc.username_pw_set(MQTT_USER, MQTT_PASS)
-mqttc.connect("xerxes.fritz.box", 1883, 60)
+mqttc.connect(MQTT_HOST, 1883, 60)
 mqttc.publish('mm/test', 'Hello World')
