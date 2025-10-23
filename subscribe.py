@@ -25,10 +25,21 @@ def callback(notification_type, notification):
 
 # noinspection PyUnusedLocal
 def on_message(client, userdata, msg):
-    print(f"Message received on topic {msg.topic} with payload {msg.payload}")
+    import json
+    try:
+        payload = msg.payload.decode('utf-8')
+        data = json.loads(payload)
+        presence = data.get('presence')
+        motion_state = data.get('motion_state')
+        print({'presence': presence, 'motion_state': motion_state})
+        message = f"presence: {presence}, motion_state: {motion_state}"
+    except Exception as e:
+        print(f"Fehler beim Verarbeiten des Payloads: {e}")
+        message = "Ungültiges Payload"
+
     DBusNotification(appname="dbus_notification", callback=callback).send(
         title="MQTT",
-        message=f"Recieved topic '{msg.topic}' with payload '{msg.payload}'",
+        message=message,
         logo="/usr/share/icons/Yaru/16x16/status/dialog-warning.png",
         image="/usr/share/icons/Yaru/16x16/status/dialog-information.png",
         sound="/usr/share/sounds/gnome/default/alerts/hum.ogg",
